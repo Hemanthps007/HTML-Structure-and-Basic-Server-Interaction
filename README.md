@@ -12,7 +12,6 @@ Best Practices
 Resources
 About Me
 
-
 🌟 Introduction
 This repository covers the fundamental concepts of HTML structure and how web browsers interact with servers. Understanding these basics is essential for anyone starting their journey in web development. HTML provides the structural foundation of web pages, while server interaction enables dynamic content and data exchange between clients and servers.
 

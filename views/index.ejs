@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+    <h1>User Management System</h1>
+    <p>Server-Side Rendering using Node.js & Express</p>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>Create User</h2>
+        <form action="/submit" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <button type="submit">Add User</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Registered Users</h2>
+
+        <% if (users.length === 0) { %>
+            <p class="empty">No users registered yet.</p>
+        <% } %>
+
+        <% users.forEach(user => { %>
+            <div class="user">
+                <span><strong><%= user.name %></strong></span>
+                <span><%= user.email %></span>
+            </div>
+        <% }) %>
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 Cognify Technology Task</p>
+</footer>
+
+</body>
+</html>

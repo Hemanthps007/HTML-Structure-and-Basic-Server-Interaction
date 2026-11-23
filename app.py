@@ -4,11 +4,23 @@ Allows running `python app.py` directly from the repository root.
 """
 import os
 import sys
+import importlib.util
 
-# Add HTML-Structure directory to search path
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "HTML-Structure"))
+# Ensure HTML-Structure subfolder is in sys.path
+subfolder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "HTML-Structure")
+if subfolder not in sys.path:
+    sys.path.insert(0, subfolder)
 
-from app import app
+# Load application from subfolder without circular collision
+app_path = os.path.join(subfolder, "app.py")
+spec = importlib.util.spec_from_file_location("html_structure_app", app_path)
+if spec and spec.loader:
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["html_structure_app"] = module
+    spec.loader.exec_module(module)
+    app = module.app
+else:
+    raise RuntimeError(f"Could not load application from {app_path}")
 
 if __name__ == '__main__':
     port = 5000

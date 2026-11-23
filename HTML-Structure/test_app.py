@@ -2,6 +2,10 @@
 Automated Test Suite for HTML-Structure & SSR User Management System.
 Validates routes, SSR compilation, semantic markup presence, authentication, and RBAC policies.
 """
+import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import unittest
 from app import app, db
 from models import User, AuditLog

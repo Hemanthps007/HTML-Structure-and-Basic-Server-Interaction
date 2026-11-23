@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}404 Not Found - Page Missing{% endblock %}
+
+{% block content %}
+<div class="container error-container">
+    <section class="error-card" aria-labelledby="error-404-title">
+        <span class="error-code" aria-hidden="true">404</span>
+        <h1 id="error-404-title" class="error-title">Page Not Found</h1>
+        <p class="error-desc">
+            The requested Server-Side Rendered page could not be located on this server. Check the URL for typographical errors.
+        </p>
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Homepage</a>
+            <a href="{{ url_for('html_guide') }}" class="btn btn-outline">Explore HTML Guide</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

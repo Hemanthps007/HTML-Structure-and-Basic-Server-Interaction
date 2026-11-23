@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Control Center - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    
+    <header class="page-header">
+        <div class="header-left">
+            <span class="eyebrow-pill">Role-Based Access Control</span>
+            <h1 class="page-title">Administrative Dashboard</h1>
+            <p class="page-subtitle">Server-Side Rendered administration control center and telemetry.</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('admin_users') }}" class="btn btn-primary">Manage Users &rarr;</a>
+            <a href="{{ url_for('admin_audit_logs') }}" class="btn btn-secondary">Audit Trail 📜</a>
+        </div>
+    </header>
+
+    <!-- Stat Cards Grid -->
+    <section class="admin-stats-grid" aria-labelledby="admin-stats-heading">
+        <h2 id="admin-stats-heading" class="sr-only">Account Summary Statistics</h2>
+
+        <article class="stat-card">
+            <header class="stat-card-header">
+                <span class="stat-title">Total Users</span>
+                <span class="stat-icon" aria-hidden="true">👥</span>
+            </header>
+            <p class="stat-number">{{ total_users }}</p>
+            <footer class="stat-footer">
+                <span>{{ admin_count }} Admins &bull; {{ manager_count }} Managers &bull; {{ regular_count }} Users</span>
+            </footer>
+        </article>
+
+        <article class="stat-card">
+            <header class="stat-card-header">
+                <span class="stat-title">Active Accounts</span>
+                <span class="stat-icon" aria-hidden="true">🟢</span>
+            </header>
+            <p class="stat-number text-success">{{ active_count }}</p>
+            <footer class="stat-footer">
+                <span>Healthy accounts in good standing</span>
+            </footer>
+        </article>
+
+        <article class="stat-card">
+            <header class="stat-card-header">
+                <span class="stat-title">Pending Verification</span>
+                <span class="stat-icon" aria-hidden="true">⏳</span>
+            </header>
+            <p class="stat-number text-warning">{{ pending_count }}</p>
+            <footer class="stat-footer">
+                <span>Awaiting initial authentication</span>
+            </footer>
+        </article>
+
+        <article class="stat-card">
+            <header class="stat-card-header">
+                <span class="stat-title">Suspended Accounts</span>
+                <span class="stat-icon" aria-hidden="true">⛔</span>
+            </header>
+            <p class="stat-number text-danger">{{ suspended_count }}</p>
+            <footer class="stat-footer">
+                <span>Restricted from logging in</span>
+            </footer>
+        </article>
+    </section>
+
+    <!-- Two-column Admin Section -->
+    <div class="admin-grid-two">
+        
+        <!-- Left: Recently Registered Users Table -->
+        <section class="card" aria-labelledby="latest-users-heading">
+            <header class="card-header-row">
+                <div>
+                    <h2 id="latest-users-heading" class="card-title">Recent Registrations</h2>
+                    <p class="card-subtitle">Latest accounts onboarded to the platform.</p>
+                </div>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-outline btn-sm">Full Directory</a>
+            </header>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="sr-only">List of recently registered users</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Joined</th>
+                            {% if current_user.is_admin %}
+                                <th scope="col">Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in recent_users %}
+                            <tr>
+                                <th scope="row">
+                                    <div class="user-inline-cell">
+                                        <div class="avatar-circle avatar-xs">{{ u.full_name[:2].upper() }}</div>
+                                        <div>
+                                            <strong>{{ u.full_name }}</strong><br>
+                                            <small class="text-muted">@{{ u.username }}</small>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td>
+                                    <span class="badge badge-sm badge-{{ u.role }}">{{ u.role | capitalize }}</span>
+                                </td>
+                                <td>
+                                    <span class="status-indicator status-{{ u.status }}">{{ u.status | capitalize }}</span>
+                                </td>
+                                <td>
+                                    <time datetime="{{ u.created_at.strftime('%Y-%m-%d') }}">
+                                        {{ u.created_at.strftime('%b %d') }}
+                                    </time>
+                                </td>
+                                {% if current_user.is_admin %}
+                                    <td>
+                                        <a href="{{ url_for('admin_edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline">Edit</a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Right: Recent Activity Log Feed -->
+        <section class="card" aria-labelledby="latest-logs-heading">
+            <header class="card-header-row">
+                <div>
+                    <h2 id="latest-logs-heading" class="card-title">Security &amp; Audit Trail</h2>
+                    <p class="card-subtitle">Real-time system events.</p>
+                </div>
+                <a href="{{ url_for('admin_audit_logs') }}" class="btn btn-outline btn-sm">All Logs</a>
+            </header>
+
+            <div class="audit-timeline">
+                {% for log in recent_logs %}
+                    <article class="timeline-entry">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <header class="timeline-header">
+                                <span class="badge badge-action badge-xs">{{ log.action }}</span>
+                                <time datetime="{{ log.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}" class="timeline-time">
+                                    {{ log.timestamp.strftime('%H:%M:%S') }}
+                                </time>
+                            </header>
+                            <p class="timeline-desc">{{ log.details }}</p>
+                            <small class="timeline-meta">
+                                By: <strong>{{ log.user.username if log.user else 'System' }}</strong> &bull; IP: <code>{{ log.ip_address }}</code>
+                            </small>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

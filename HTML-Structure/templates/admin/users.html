@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Directory{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    
+    <header class="page-header">
+        <div class="header-left">
+            <span class="eyebrow-pill">Directory Management</span>
+            <h1 class="page-title">User Accounts Directory</h1>
+            <p class="page-subtitle">Inspect, search, modify roles, and manage account statuses.</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('admin_audit_logs') }}" class="btn btn-outline">View Audit Logs 📜</a>
+        </div>
+    </header>
+
+    <!-- Search & Filter Controls (Accessible Form) -->
+    <section class="card filter-card" aria-labelledby="filter-heading">
+        <h2 id="filter-heading" class="sr-only">Filter and Search Directory</h2>
+        <form action="{{ url_for('admin_users') }}" method="GET" class="filter-form">
+            <div class="filter-row">
+                <!-- Search Query Input -->
+                <div class="filter-col search-col">
+                    <label for="q" class="sr-only">Search Users</label>
+                    <div class="search-input-wrap">
+                        <span class="search-icon" aria-hidden="true">🔍</span>
+                        <input 
+                            type="search" 
+                            id="q" 
+                            name="q" 
+                            class="form-control" 
+                            placeholder="Search by name, username, or email..." 
+                            value="{{ search_query }}"
+                        >
+                    </div>
+                </div>
+
+                <!-- Role Filter -->
+                <div class="filter-col">
+                    <label for="role-select" class="sr-only">Filter by Role</label>
+                    <select id="role-select" name="role" class="form-control form-select">
+                        <option value="">All Roles</option>
+                        <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Admin</option>
+                        <option value="manager" {% if role_filter == 'manager' %}selected{% endif %}>Manager</option>
+                        <option value="user" {% if role_filter == 'user' %}selected{% endif %}>Standard User</option>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="filter-col">
+                    <label for="status-select" class="sr-only">Filter by Status</label>
+                    <select id="status-select" name="status" class="form-control form-select">
+                        <option value="">All Statuses</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="suspended" {% if status_filter == 'suspended' %}selected{% endif %}>Suspended</option>
+                    </select>
+                </div>
+
+                <!-- Submit & Clear -->
+                <div class="filter-col filter-actions">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    {% if search_query or role_filter or status_filter %}
+                        <a href="{{ url_for('admin_users') }}" class="btn btn-outline" title="Clear filters">Reset</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Users Table Section -->
+    <section class="card table-card" aria-labelledby="table-heading">
+        <header class="card-header-row">
+            <div>
+                <h2 id="table-heading" class="card-title">Registered Users</h2>
+                <p class="card-subtitle">Showing {{ users | length }} of {{ pagination.total }} records</p>
+            </div>
+        </header>
+
+        {% if users %}
+            <div class="table-responsive">
+                <table class="data-table" aria-label="System Users">
+                    <caption class="sr-only">Table listing all platform users with roles, statuses, and action controls</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">User Details</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Created</th>
+                            <th scope="col" class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                            <tr>
+                                <td class="text-muted">#{{ u.id }}</td>
+                                <th scope="row" class="user-cell">
+                                    <div class="user-inline-cell">
+                                        <div class="avatar-circle avatar-sm">{{ u.full_name[:2].upper() }}</div>
+                                        <div>
+                                            <span class="user-name-strong">{{ u.full_name }}</span>
+                                            <span class="user-username-sub">@{{ u.username }}</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td>
+                                    <a href="mailto:{{ u.email }}" class="email-link">{{ u.email }}</a>
+                                </td>
+                                <td>
+                                    <span class="badge badge-{{ u.role }}">{{ u.role | capitalize }}</span>
+                                </td>
+                                <td>
+                                    <span class="status-indicator status-{{ u.status }}">{{ u.status | capitalize }}</span>
+                                </td>
+                                <td>
+                                    <time datetime="{{ u.created_at.strftime('%Y-%m-%d') }}" class="text-muted">
+                                        {{ u.created_at.strftime('%b %d, %Y') }}
+                                    </time>
+                                </td>
+                                <td class="actions-cell text-right">
+                                    {% if current_user.is_admin %}
+                                        <a href="{{ url_for('admin_edit_user', user_id=u.id) }}" class="btn btn-outline btn-sm" title="Edit user role and status">
+                                            Edit ✏️
+                                        </a>
+
+                                        {% if u.id != current_user.id %}
+                                            <form action="{{ url_for('admin_delete_user', user_id=u.id) }}" method="POST" class="inline-form" onsubmit="return confirm('Are you certain you wish to permanently delete user account: {{ u.username }}? This action is recorded in the audit trail.');">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete account">
+                                                    Delete 🗑️
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <span class="badge badge-secondary badge-xs">You</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted text-xs">Read-Only</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Accessible Pagination -->
+            {% include "components/pagination.html" %}
+
+        {% else %}
+            <div class="empty-state-box">
+                <span class="empty-icon" aria-hidden="true">🔎</span>
+                <h3>No Users Found</h3>
+                <p>No user accounts matched your search parameters.</p>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-primary mt-4">Reset All Filters</a>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

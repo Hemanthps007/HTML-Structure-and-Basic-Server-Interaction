@@ -1,0 +1,10 @@
+{
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/HTML-Structure",
+        "./HTML-Structure"
+    ],
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/HTML-Structure",
+        "./HTML-Structure"
+    ]
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <!-- Document Metadata & Viewport Architecture -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>{% block title %}User Management System{% endblock %} | Cognify HTML Structure & SSR</title>
+    
+    <meta name="description" content="Demonstration of semantic HTML5 document architecture and Server-Side Rendering (SSR) user management powered by Python and Flask.">
+    <meta name="author" content="Cognify Technology & Hemanth P S">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/html-guide.css') }}">
+    
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="site-body">
+    <!-- Accessibility Skip Link for Keyboard / Screen Reader Navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Top Semantic Header Banner -->
+    <header class="site-header" role="banner">
+        <div class="header-container container">
+            <div class="header-branding">
+                <a href="{{ url_for('index') }}" class="brand-link" aria-label="Cognify Homepage">
+                    <span class="brand-badge" aria-hidden="true">&lt;HTML5&gt;</span>
+                    <span class="brand-title">Cognify User Management</span>
+                </a>
+                <span class="brand-tagline">Server-Side Rendered (SSR) Architecture</span>
+            </div>
+
+            <!-- Primary Navigation Bar -->
+            <nav class="main-nav" aria-label="Primary Navigation" role="navigation">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('html_guide') }}" class="nav-link {% if request.endpoint == 'html_guide' %}active{% endif %}">HTML Guide</a>
+                    </li>
+
+                    {% if current_user %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint in ['profile', 'edit_profile'] %}active{% endif %}">My Profile</a>
+                        </li>
+
+                        {% if current_user.is_manager %}
+                            <li class="nav-item nav-dropdown">
+                                <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if 'admin' in request.endpoint %}active{% endif %}" aria-haspopup="true">
+                                    Admin Panel <span class="badge badge-sm badge-admin">{{ current_user.role | capitalize }}</span>
+                                </a>
+                                <ul class="dropdown-menu" aria-label="Admin Submenu">
+                                    <li><a href="{{ url_for('admin_dashboard') }}">Overview Dashboard</a></li>
+                                    <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
+                                    <li><a href="{{ url_for('admin_audit_logs') }}">Audit Trail</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        <li class="nav-item nav-user-chip">
+                            <span class="user-greeting">Signed in as <strong>{{ current_user.username }}</strong></span>
+                            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Sign Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('login') }}" class="btn btn-outline btn-sm">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Create Account</a>
+                        </li>
+                    {% endif %}
+
+                    <!-- Semantic Tag Inspector Tool Toggle -->
+                    <li class="nav-item">
+                        <button id="toggle-semantic-inspector" type="button" class="btn btn-tag-inspector btn-sm" title="Toggle visible badges on semantic HTML5 tags">
+                            🏷️ <span class="inspector-text">Show Semantic Tags</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- System-wide Flash Alert Region -->
+    {% include "components/alerts.html" %}
+
+    <!-- Main Landmark Content Area -->
+    <main id="main-content" class="site-main" role="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Semantic Footer Landmark -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container container">
+            <div class="footer-grid">
+                <!-- Column 1: Project Identity -->
+                <section class="footer-col" aria-labelledby="footer-about-heading">
+                    <h3 id="footer-about-heading" class="footer-heading">HTML Structure Demonstration</h3>
+                    <p class="footer-description">
+                        Engineered to exhibit clean, standards-compliant HTML5 semantic architecture, accessible web forms, 
+                        and robust Server-Side Rendering (SSR) via Python, Flask, Jinja2, and SQLite.
+                    </p>
+                    <div class="semantic-spec-badges">
+                        <span class="spec-pill">HTML5 Spec</span>
+                        <span class="spec-pill">WCAG 2.1 AA</span>
+                        <span class="spec-pill">Python 3.14 SSR</span>
+                        <span class="spec-pill">Jinja2 Engine</span>
+                    </div>
+                </section>
+
+                <!-- Column 2: Key Semantic Landmarks -->
+                <section class="footer-col" aria-labelledby="footer-structure-heading">
+                    <h3 id="footer-structure-heading" class="footer-heading">Featured Semantic Elements</h3>
+                    <ul class="footer-links">
+                        <li><code>&lt;header&gt;</code> &amp; <code>&lt;nav&gt;</code> &mdash; Global Navigation</li>
+                        <li><code>&lt;main&gt;</code> &mdash; Core Single Landmark</li>
+                        <li><code>&lt;section&gt;</code> &amp; <code>&lt;article&gt;</code> &mdash; Document Chunking</li>
+                        <li><code>&lt;fieldset&gt;</code> &amp; <code>&lt;legend&gt;</code> &mdash; Accessible Forms</li>
+                        <li><code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> &mdash; User Datagrids</li>
+                        <li><code>&lt;figure&gt;</code> &amp; <code>&lt;figcaption&gt;</code> &mdash; Profile Avatars</li>
+                    </ul>
+                </section>
+
+                <!-- Column 3: Contact & Meta -->
+                <section class="footer-col" aria-labelledby="footer-contact-heading">
+                    <h3 id="footer-contact-heading" class="footer-heading">System &amp; Publisher Info</h3>
+                    <address class="footer-address">
+                        <strong>Cognify Technology Assessment</strong><br>
+                        Authored by: <a href="mailto:pshemanth2@gmail.com">Hemanth P S</a><br>
+                        Location: Bengaluru, India<br>
+                        Repo: <a href="https://github.com/Hemanthps007/HTML-Structure-and-Basic-Server-Interaction" target="_blank" rel="noopener noreferrer">HTML-Structure-and-Basic-Server-Interaction</a>
+                    </address>
+                </section>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; {{ current_year }} Cognify Technology Task. Built with Python Server-Side Rendering (SSR).</p>
+                <p class="footer-legal">Designed for modern browsers conforming to W3C Web Standards.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Progressive Enhancement (Modal & Semantic Inspector) -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts_extra %}{% endblock %}
+</body>
+</html>

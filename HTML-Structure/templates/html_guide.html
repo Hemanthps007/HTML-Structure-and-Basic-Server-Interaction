@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}HTML Structure Deep Dive Guide{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    
+    <header class="page-header">
+        <span class="eyebrow-pill">Educational Reference &amp; Specifications</span>
+        <h1 class="page-title">The Complete Guide to Semantic HTML Structure</h1>
+        <p class="page-subtitle">
+            An in-depth architectural breakdown of HTML5 document structure, semantic element selection, 
+            accessible forms, tables, and Server-Side Rendering (SSR) interaction models.
+        </p>
+    </header>
+
+    <div class="guide-layout">
+        <!-- Sidebar Navigation for Quick Jumping -->
+        <aside class="guide-sidebar" aria-label="Table of Contents">
+            <nav class="toc-nav">
+                <h3 class="toc-heading">Guide Navigation</h3>
+                <ul class="toc-list">
+                    <li><a href="#doc-structure">1. Document Anatomy</a></li>
+                    <li><a href="#semantic-landmarks">2. Semantic Landmarks</a></li>
+                    <li><a href="#form-architecture">3. Form Engineering</a></li>
+                    <li><a href="#tabular-data">4. Tabular Data</a></li>
+                    <li><a href="#ssr-lifecycle">5. SSR Lifecycle</a></li>
+                    <li><a href="#wcag-checklist">6. Accessibility Checklist</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Guide Articles -->
+        <div class="guide-content">
+
+            <!-- Section 1: HTML Document Anatomy -->
+            <section id="doc-structure" class="guide-section" aria-labelledby="heading-anatomy">
+                <h2 id="heading-anatomy" class="section-title">1. Anatomy of an HTML5 Document</h2>
+                <p>
+                    Every HTML5 document requires a clear three-tier structure: Document Type Declaration, Head Section (metadata &amp; resources), and Body Section (rendered content).
+                </p>
+
+                <div class="code-preview-box">
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en" dir="ltr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Page Title | Site Name&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/style.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;header role="banner"&gt;...&lt;/header&gt;
+    &lt;main role="main"&gt;...&lt;/main&gt;
+    &lt;footer role="contentinfo"&gt;...&lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <div class="spec-table-wrap">
+                    <table class="data-table">
+                        <caption class="sr-only">Core Document Elements and their functional responsibilities</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Element</th>
+                                <th scope="col">Role &amp; Function</th>
+                                <th scope="col">Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>&lt;!DOCTYPE html&gt;</code></td>
+                                <td>Tells the browser to render using modern HTML5 standard mode.</td>
+                                <td>Prevents legacy "quirks mode" rendering bugs.</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;html lang="en"&gt;</code></td>
+                                <td>Identifies root container and specifies primary natural language.</td>
+                                <td>Essential for screen readers to pronounce words with the right accent.</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;meta charset="UTF-8"&gt;</code></td>
+                                <td>Specifies character encoding for all languages and emojis.</td>
+                                <td>Prevents text mojibake or corrupt character rendering.</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;meta name="viewport"&gt;</code></td>
+                                <td>Configures mobile display width and initial zoom scale.</td>
+                                <td>Critical prerequisite for responsive, mobile-friendly layouts.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 2: Semantic Landmarks -->
+            <section id="semantic-landmarks" class="guide-section" aria-labelledby="heading-landmarks">
+                <h2 id="heading-landmarks" class="section-title">2. Semantic Landmarks vs Generic Divs</h2>
+                <p>
+                    HTML5 introduced landmark elements that provide semantic meaning both to search engines and assistive technologies like screen readers (NVDA, VoiceOver, JAWS).
+                </p>
+
+                <div class="landmarks-grid">
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;header&gt;</span>
+                        <h3>Banner Landmark</h3>
+                        <p>Represents introductory content, branding logos, site search, and navigation bars.</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;nav&gt;</span>
+                        <h3>Navigation Landmark</h3>
+                        <p>Groups major navigational links. Should always include an <code>aria-label</code> when multiple navs exist.</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;main&gt;</span>
+                        <h3>Main Content Landmark</h3>
+                        <p>Contains the central unique content of the document. There must only be one visible <code>&lt;main&gt;</code> per page.</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;section&gt;</span>
+                        <h3>Thematic Grouping</h3>
+                        <p>Represents a standalone section of a document, typically with an introductory heading (<code>&lt;h2&gt;</code>).</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;article&gt;</span>
+                        <h3>Self-Contained Composition</h3>
+                        <p>Encloses independent, reusable content such as a user profile card, blog post, or comment.</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;aside&gt;</span>
+                        <h3>Complementary Content</h3>
+                        <p>Houses content tangentially related to surrounding content, like notification banners or sidebars.</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;footer&gt;</span>
+                        <h3>Contentinfo Landmark</h3>
+                        <p>Contains authorship details, copyright notices, terms links, and related contact info.</p>
+                    </article>
+
+                    <article class="landmark-card">
+                        <span class="tag-badge">&lt;figure&gt; &amp; &lt;figcaption&gt;</span>
+                        <h3>Media with Caption</h3>
+                        <p>Self-contained visual assets (avatars, illustrations, diagrams) with associated textual captions.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Section 3: Accessible Form Engineering -->
+            <section id="form-architecture" class="guide-section" aria-labelledby="heading-forms">
+                <h2 id="heading-forms" class="section-title">3. Accessible Web Form Architecture</h2>
+                <p>
+                    Forms are the primary interactive vehicle in user management systems. Proper HTML structure guarantees keyboard accessibility, clear error communication, and seamless autofill.
+                </p>
+
+                <div class="diagram-card">
+                    <h3>Form Anatomy Used in Registration &amp; Profile Editing:</h3>
+                    <ul class="form-structure-tree">
+                        <li><code>&lt;form action="/register" method="POST"&gt;</code> &mdash; Explicit action destination &amp; HTTP method</li>
+                        <li>&nbsp;&nbsp;<code>&lt;fieldset&gt;</code> &mdash; Groups logically related input fields</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;legend&gt;Account Credentials&lt;/legend&gt;</code> &mdash; Screen reader caption for field group</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;label for="username"&gt;Username&lt;/label&gt;</code> &mdash; Programmatic association via matching ID</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;input id="username" name="username" type="text" required aria-describedby="user-help"&gt;</code></li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;small id="user-help"&gt;Letters, numbers, underscores only.&lt;/small&gt;</code></li>
+                        <li>&nbsp;&nbsp;<code>&lt;/fieldset&gt;</code></li>
+                        <li>&nbsp;&nbsp;<code>&lt;button type="submit"&gt;Create Account&lt;/button&gt;</code></li>
+                        <li><code>&lt;/form&gt;</code></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 4: Tabular Data -->
+            <section id="tabular-data" class="guide-section" aria-labelledby="heading-tables">
+                <h2 id="heading-tables" class="section-title">4. Semantic Data Tables</h2>
+                <p>
+                    In our Admin Panel, the user directory and audit trail utilize semantic data tables rather than grid divs, ensuring complete accessibility for assistive technologies:
+                </p>
+                <ul>
+                    <li><code>&lt;caption&gt;</code>: Descriptive title providing context before parsing data cells.</li>
+                    <li><code>&lt;thead&gt;</code> &amp; <code>&lt;tbody&gt;</code>: Clear partition between header definitions and data records.</li>
+                    <li><code>&lt;th scope="col"&gt;</code>: Explicit header scope associating columns with individual cells.</li>
+                    <li><code>&lt;th scope="row"&gt;</code>: Associates row identifiers (e.g., username or ID) across the row.</li>
+                </ul>
+            </section>
+
+            <!-- Section 5: SSR Lifecycle -->
+            <section id="ssr-lifecycle" class="guide-section" aria-labelledby="heading-ssr">
+                <h2 id="heading-ssr" class="section-title">5. Server-Side Rendering (SSR) Request Lifecycle</h2>
+                <p>
+                    Unlike single-page applications (SPAs) that deliver blank HTML bundles and execute heavy JavaScript client-side, this Python + Flask application renders complete, accessible HTML on the server.
+                </p>
+
+                <div class="steps-flow">
+                    <div class="flow-step">
+                        <span class="step-num">1</span>
+                        <h4>HTTP Request</h4>
+                        <p>User navigates to a URL or submits a form via <code>GET</code> or <code>POST</code>.</p>
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-num">2</span>
+                        <h4>Python Server Logic</h4>
+                        <p>Flask routes intercept request, authenticate session cookies, query SQLite via SQLAlchemy.</p>
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-num">3</span>
+                        <h4>Jinja2 Template Compilation</h4>
+                        <p>Server merges query results into semantic HTML templates, resolving inheritance &amp; loops.</p>
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-num">4</span>
+                        <h4>Complete HTML Response</h4>
+                        <p>Browser receives full HTML payload with status 200/403/404, ready for immediate first paint.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: WCAG Accessibility Checklist -->
+            <section id="wcag-checklist" class="guide-section" aria-labelledby="heading-wcag">
+                <h2 id="heading-wcag" class="section-title">6. WCAG 2.1 AA Compliance in this Project</h2>
+                <div class="checklist-grid">
+                    <div class="checklist-item done">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Skip to Content Link</strong>
+                            <p>Allows keyboard-only users to bypass navigation headers directly to main content.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-item done">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Explicit Form Labels</strong>
+                            <p>Every single input, select, and textarea element has a corresponding <code>&lt;label for="..."&gt;</code>.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-item done">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Color Contrast Ratios</strong>
+                            <p>All text styles strictly exceed the minimum 4.5:1 contrast requirement for readability.</p>
+                        </div>
+                    </div>
+                    <div class="checklist-item done">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Live Region Flash Alerts</strong>
+                            <p>Notifications use <code>role="alert"</code> and <code>aria-live="polite"</code> for screen reader audio cues.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

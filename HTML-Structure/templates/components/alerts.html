@@ -1,0 +1,19 @@
+{# Flash Alerts Component using semantic <aside role="alert"> #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <aside class="alerts-container" aria-label="System Notifications" role="region">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert" aria-live="polite">
+          <div class="alert-icon" aria-hidden="true">
+            {% if category == 'success' %}✓
+            {% elif category == 'danger' or category == 'error' %}⚠️
+            {% elif category == 'warning' %}🔔
+            {% else %}ℹ️{% endif %}
+          </div>
+          <div class="alert-message">{{ message }}</div>
+          <button type="button" class="alert-dismiss" aria-label="Close notification" onclick="this.parentElement.remove();">&times;</button>
+        </div>
+      {% endfor %}
+    </aside>
+  {% endif %}
+{% endwith %}

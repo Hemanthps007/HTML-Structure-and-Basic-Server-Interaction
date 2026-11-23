@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}System Audit Logs - Security &amp; Activity Trail{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    
+    <header class="page-header">
+        <div class="header-left">
+            <span class="eyebrow-pill">Security &amp; Compliance</span>
+            <h1 class="page-title">System Audit Trail</h1>
+            <p class="page-subtitle">Immutable chronological log of all authentication and management events.</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('admin_users') }}" class="btn btn-outline">&larr; User Directory</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Dashboard</a>
+        </div>
+    </header>
+
+    <!-- Filter Bar -->
+    <section class="card filter-card" aria-labelledby="log-filter-heading">
+        <h2 id="log-filter-heading" class="sr-only">Filter Audit Logs</h2>
+        <form action="{{ url_for('admin_audit_logs') }}" method="GET" class="filter-form">
+            <div class="filter-row">
+                <div class="filter-col search-col">
+                    <label for="action-filter" class="sr-only">Action Name</label>
+                    <div class="search-input-wrap">
+                        <span class="search-icon" aria-hidden="true">🏷️</span>
+                        <input 
+                            type="search" 
+                            id="action-filter" 
+                            name="action" 
+                            class="form-control" 
+                            placeholder="Filter by action (e.g. LOGIN, REGISTER, STATUS, DELETE)..." 
+                            value="{{ action_filter }}"
+                        >
+                    </div>
+                </div>
+
+                <div class="filter-col filter-actions">
+                    <button type="submit" class="btn btn-primary">Filter Logs</button>
+                    {% if action_filter %}
+                        <a href="{{ url_for('admin_audit_logs') }}" class="btn btn-outline">Clear</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Audit Logs Table -->
+    <section class="card table-card" aria-labelledby="audit-table-heading">
+        <header class="card-header-row">
+            <div>
+                <h2 id="audit-table-heading" class="card-title">Activity Records</h2>
+                <p class="card-subtitle">Showing {{ logs | length }} of {{ pagination.total }} total events</p>
+            </div>
+        </header>
+
+        {% if logs %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="sr-only">Chronological audit log records capturing events, actors, and network origin</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Timestamp</th>
+                            <th scope="col">Actor / User</th>
+                            <th scope="col">Action Type</th>
+                            <th scope="col">Details &amp; Narrative</th>
+                            <th scope="col">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                            <tr>
+                                <td class="text-muted">#{{ log.id }}</td>
+                                <td>
+                                    <time datetime="{{ log.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}" class="timestamp-text">
+                                        {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                                    </time>
+                                </td>
+                                <td>
+                                    {% if log.user %}
+                                        <strong>{{ log.user.full_name }}</strong><br>
+                                        <small class="text-muted">@{{ log.user.username }}</small>
+                                    {% else %}
+                                        <span class="text-muted">System / Deleted</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-action">{{ log.action }}</span>
+                                </td>
+                                <td class="log-details-cell">{{ log.details }}</td>
+                                <td><code>{{ log.ip_address or 'Local' }}</code></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Accessible Pagination Component -->
+            {% include "components/pagination.html" %}
+
+        {% else %}
+            <div class="empty-state-box">
+                <span class="empty-icon" aria-hidden="true">📜</span>
+                <h3>No Audit Logs Found</h3>
+                <p>No activity records matched your filter criteria.</p>
+                <a href="{{ url_for('admin_audit_logs') }}" class="btn btn-primary mt-4">View All Logs</a>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

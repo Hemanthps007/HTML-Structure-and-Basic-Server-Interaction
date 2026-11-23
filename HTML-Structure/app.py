@@ -3,15 +3,26 @@ Flask Server-Side Rendering (SSR) Application
 Demonstrates complete HTML Document Structure, Semantic Tags, and Full-Featured User Management.
 """
 import os
+import sys
+
+# Ensure current directory is in sys.path for IDE language servers & runtime execution
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from datetime import datetime, timezone
 from functools import wraps
 from flask import (
     Flask, render_template, request, redirect, url_for,
-    flash, session, g, abort
+    flash, session, g, abort, has_request_context
 )
-from models import db, User, AuditLog
-from database import seed_database
-from forms import validate_registration, validate_profile_update
+
+try:
+    from models import db, User, AuditLog
+    from database import seed_database
+    from forms import validate_registration, validate_profile_update
+except ImportError:
+    from .models import db, User, AuditLog
+    from .database import seed_database
+    from .forms import validate_registration, validate_profile_update
 
 # Initialize application
 app = Flask(__name__)
@@ -83,7 +94,9 @@ def admin_required(f):
 def log_action(user_id, action, details):
     """Record an audit trail event."""
     try:
-        ip = request.remote_addr or '127.0.0.1'
+        ip = '127.0.0.1'
+        if has_request_context():
+            ip = request.remote_addr or '127.0.0.1'
         log = AuditLog(
             user_id=user_id,
             action=action,

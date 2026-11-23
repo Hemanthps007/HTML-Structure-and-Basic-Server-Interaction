@@ -2,8 +2,17 @@
 Database initialization and realistic seeder script.
 Populates standard roles, test accounts, and audit history.
 """
+import os
+import sys
 from datetime import datetime, timezone, timedelta
-from models import db, User, AuditLog
+
+# Ensure local directory is in sys.path for IDE language servers & runtime execution
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+try:
+    from models import db, User, AuditLog
+except ImportError:
+    from .models import db, User, AuditLog
 
 def seed_database():
     """Populate default users and activity logs if database is empty."""

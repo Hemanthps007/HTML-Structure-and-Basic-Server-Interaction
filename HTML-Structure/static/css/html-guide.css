@@ -1,0 +1,382 @@
+/* ==========================================================================
+   HTML-Structure Educational Guide & Interactive Tag Inspector
+   Visually highlights HTML5 semantic elements when inspector mode is active.
+   ========================================================================== */
+
+/* Guide Page Layout */
+.guide-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+.guide-sidebar {
+    position: sticky;
+    top: 96px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.toc-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.toc-list {
+    list-style: none;
+    font-size: 0.9rem;
+}
+
+.toc-list li {
+    margin-bottom: 10px;
+}
+
+.toc-list a {
+    text-decoration: none;
+    color: var(--secondary);
+    display: block;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+}
+
+.toc-list a:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.guide-section {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+}
+
+.guide-section p {
+    font-size: 1rem;
+    color: var(--secondary);
+    margin-bottom: 16px;
+    line-height: 1.7;
+}
+
+.code-preview-box {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: var(--radius-md);
+    padding: 20px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.spec-table-wrap {
+    margin-top: 16px;
+}
+
+.landmarks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.landmark-card {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    position: relative;
+}
+
+.tag-badge {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #4338ca;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+}
+
+.landmark-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.landmark-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.diagram-card {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.diagram-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+}
+
+.form-structure-tree {
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #334155;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    line-height: 1.8;
+}
+
+.steps-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.flow-step {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    position: relative;
+}
+
+.step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+}
+
+.flow-step h4 {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+.flow-step p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+}
+
+.checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.checklist-item {
+    display: flex;
+    gap: 12px;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
+    border-radius: 50%;
+    font-weight: 800;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+}
+
+.checklist-item strong {
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.checklist-item p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   INTERACTIVE SEMANTIC TAG INSPECTOR OVERLAY
+   Activated when body has class: .semantic-debug-active
+   ========================================================================== */
+
+body.semantic-debug-active header {
+    outline: 2px dashed #2563eb !important;
+    position: relative;
+}
+body.semantic-debug-active header::before {
+    content: '<header role="banner">';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: #2563eb;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active nav {
+    outline: 2px dashed #0284c7 !important;
+    position: relative;
+}
+body.semantic-debug-active nav::before {
+    content: '<nav aria-label="...">';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #0284c7;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active main {
+    outline: 2px dashed #7c3aed !important;
+    position: relative;
+}
+body.semantic-debug-active main::before {
+    content: '<main role="main">';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: #7c3aed;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active section {
+    outline: 2px dashed #059669 !important;
+    position: relative;
+}
+body.semantic-debug-active section::before {
+    content: '<section aria-labelledby="...">';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: #059669;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active article {
+    outline: 2px dashed #d97706 !important;
+    position: relative;
+}
+body.semantic-debug-active article::before {
+    content: '<article>';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #d97706;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active aside {
+    outline: 2px dashed #e11d48 !important;
+    position: relative;
+}
+body.semantic-debug-active aside::before {
+    content: '<aside aria-label="...">';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: #e11d48;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active footer {
+    outline: 2px dashed #475569 !important;
+    position: relative;
+}
+body.semantic-debug-active footer::before {
+    content: '<footer role="contentinfo">';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: #475569;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 999;
+}
+
+body.semantic-debug-active fieldset {
+    outline: 2px dashed #0d9488 !important;
+}
+
+body.semantic-debug-active table {
+    outline: 2px dashed #4f46e5 !important;
+}
+
+@media (max-width: 800px) {
+    .guide-layout {
+        grid-template-columns: 1fr;
+    }
+    .guide-sidebar {
+        position: static;
+    }
+}

@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Server-Side Rendered User Management{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+
+    <!-- Hero Section -->
+    <section class="hero-section" aria-labelledby="hero-title">
+        <div class="hero-content">
+            <span class="eyebrow-pill">Python SSR &bull; Flask &bull; HTML5 Architecture</span>
+            <h1 id="hero-title" class="hero-title">Semantic HTML5 User Management System</h1>
+            <p class="hero-description">
+                A production-grade demonstration showcasing <strong>semantic document hierarchy</strong>, 
+                <strong>accessible web forms</strong>, and <strong>Server-Side Rendering (SSR)</strong>.
+                Engineered with clean separation of presentation, validation, role-based security, and data integrity.
+            </p>
+            <div class="hero-actions">
+                {% if not is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Create An Account</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg">Sign In to Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('profile') }}" class="btn btn-primary btn-lg">Go to My Profile</a>
+                    {% if current_user.is_manager %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-admin btn-lg">Admin Control Center</a>
+                    {% endif %}
+                {% endif %}
+                <a href="{{ url_for('html_guide') }}" class="btn btn-secondary btn-lg">Explore HTML Guide 📖</a>
+            </div>
+        </div>
+        
+        <aside class="hero-card credentials-card" aria-labelledby="demo-creds-heading">
+            <h2 id="demo-creds-heading" class="card-title">⚡ Instant Demo Credentials</h2>
+            <p class="card-intro">Use these pre-seeded accounts to explore Role-Based Access Control (RBAC):</p>
+            <div class="creds-list">
+                <article class="cred-item">
+                    <header class="cred-header">
+                        <span class="badge badge-admin">Admin Role</span>
+                        <code>admin</code>
+                    </header>
+                    <p class="cred-meta">Password: <code>Admin@12345</code></p>
+                    <small>Full user management, audit logs, and status controls.</small>
+                </article>
+
+                <article class="cred-item">
+                    <header class="cred-header">
+                        <span class="badge badge-manager">Manager Role</span>
+                        <code>alex_manager</code>
+                    </header>
+                    <p class="cred-meta">Password: <code>Manager@12345</code></p>
+                    <small>User directory inspection &amp; audit history access.</small>
+                </article>
+
+                <article class="cred-item">
+                    <header class="cred-header">
+                        <span class="badge badge-user">Standard User</span>
+                        <code>sarah_dev</code>
+                    </header>
+                    <p class="cred-meta">Password: <code>User@12345</code></p>
+                    <small>Profile editing, personal activity logs, password change.</small>
+                </article>
+            </div>
+        </aside>
+    </section>
+
+    <!-- Key Metrics Section -->
+    <section class="metrics-section" aria-labelledby="metrics-heading">
+        <h2 id="metrics-heading" class="section-title">System Metrics &amp; SSR State</h2>
+        <div class="metrics-grid">
+            <article class="metric-card">
+                <div class="metric-icon" aria-hidden="true">👥</div>
+                <div class="metric-info">
+                    <span class="metric-value">{{ total_users }}</span>
+                    <span class="metric-label">Registered Users</span>
+                </div>
+                <p class="metric-footer">Stored in relational SQLite database</p>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-icon" aria-hidden="true">🟢</div>
+                <div class="metric-info">
+                    <span class="metric-value">{{ active_users }}</span>
+                    <span class="metric-label">Active Accounts</span>
+                </div>
+                <p class="metric-footer">Active status verified via SSR middleware</p>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-icon" aria-hidden="true">📜</div>
+                <div class="metric-info">
+                    <span class="metric-value">{{ total_logs }}</span>
+                    <span class="metric-label">Audit Log Events</span>
+                </div>
+                <p class="metric-footer">Persistent audit trail for actions</p>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-icon" aria-hidden="true">⚡</div>
+                <div class="metric-info">
+                    <span class="metric-value">Jinja2</span>
+                    <span class="metric-label">SSR Template Engine</span>
+                </div>
+                <p class="metric-footer">100% Server rendered HTML payload</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- HTML Architecture Deep-Dive Grid -->
+    <section class="features-section" aria-labelledby="features-heading">
+        <header class="section-header">
+            <h2 id="features-heading" class="section-title">Critical Aspects of HTML Structure &amp; SSR</h2>
+            <p class="section-subtitle">How this project implements industry best practices for structure, security, and accessibility.</p>
+        </header>
+
+        <div class="features-grid">
+            <article class="feature-card">
+                <div class="feature-badge">01</div>
+                <h3 class="feature-title">Semantic Document Hierarchy</h3>
+                <p class="feature-desc">
+                    Replaces generic <code>&lt;div&gt;</code> soup with distinct HTML5 landmarks: 
+                    <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, 
+                    <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, and <code>&lt;footer&gt;</code>.
+                </p>
+                <ul class="feature-checklist">
+                    <li>Single primary <code>&lt;main&gt;</code> landmark per view</li>
+                    <li>ARIA roles providing assistive tree accessibility</li>
+                    <li>Strict heading hierarchy (h1 &rarr; h2 &rarr; h3)</li>
+                </ul>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-badge">02</div>
+                <h3 class="feature-title">Accessible Form Engineering</h3>
+                <p class="feature-desc">
+                    Forms leverage <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code> to group logical units, 
+                    strict <code>&lt;label for="..."&gt;</code> bindings, and native HTML5 validation constraints.
+                </p>
+                <ul class="feature-checklist">
+                    <li>Server-validated feedback with <code>aria-invalid</code></li>
+                    <li>Password strength validation &amp; confirm matches</li>
+                    <li>Multi-input types: email, password, tel, checkbox</li>
+                </ul>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-badge">03</div>
+                <h3 class="feature-title">Server-Side Rendering (SSR)</h3>
+                <p class="feature-desc">
+                    HTML pages are fully constructed on the server via Python and Flask before being dispatched to the browser.
+                    Guarantees immediate first meaningful paint (FMP), superior SEO, and zero initial JS hydration delay.
+                </p>
+                <ul class="feature-checklist">
+                    <li>Dynamic Jinja2 templating with inheritance</li>
+                    <li>Secure HTTP-only session cookies</li>
+                    <li>Dynamic CSRF-ready form actions and flash alerts</li>
+                </ul>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-badge">04</div>
+                <h3 class="feature-title">Role-Based Access Control (RBAC)</h3>
+                <p class="feature-desc">
+                    Granular server-side route guards enforcing role permissions (Admin, Manager, and Standard User).
+                    Protected views automatically reject unauthorized access with semantic 403 error pages.
+                </p>
+                <ul class="feature-checklist">
+                    <li>Admin user modification &amp; permanent deletion</li>
+                    <li>Manager view access to system audit logs</li>
+                    <li>User profile self-service modification</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <!-- Recent Registered Users Section -->
+    <section class="recent-users-section" aria-labelledby="recent-users-heading">
+        <header class="section-header-row">
+            <div>
+                <h2 id="recent-users-heading" class="section-title">Recently Registered Users</h2>
+                <p class="section-subtitle">Real-time server-side query from SQLite database.</p>
+            </div>
+            {% if is_authenticated and current_user.is_manager %}
+                <a href="{{ url_for('admin_users') }}" class="btn btn-outline btn-sm">View All Users &rarr;</a>
+            {% endif %}
+        </header>
+
+        <div class="users-card-grid">
+            {% for u in recent_users %}
+                <article class="user-mini-card">
+                    <figure class="user-mini-avatar-wrap">
+                        <div class="avatar-circle avatar-sm">{{ u.full_name[:2].upper() }}</div>
+                    </figure>
+                    <div class="user-mini-details">
+                        <h3 class="user-mini-name">{{ u.full_name }}</h3>
+                        <p class="user-mini-username">@{{ u.username }}</p>
+                        <div class="user-mini-badges">
+                            <span class="badge badge-sm badge-{{ u.role }}">{{ u.role | capitalize }}</span>
+                            <span class="status-indicator status-{{ u.status }}">{{ u.status | capitalize }}</span>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+{% endblock %}

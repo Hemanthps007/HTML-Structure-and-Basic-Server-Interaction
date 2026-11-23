@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - Registration{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper container">
+    <section class="auth-card auth-card-wide" aria-labelledby="register-heading">
+        <header class="auth-header">
+            <span class="eyebrow-pill">Self-Service Onboarding</span>
+            <h1 id="register-heading" class="auth-title">Create Your Account</h1>
+            <p class="auth-subtitle">Join the system to experience server-side rendered user profile management.</p>
+        </header>
+
+        <form action="{{ url_for('register') }}" method="POST" class="auth-form" novalidate>
+            
+            <!-- Fieldset 1: Identity & Contact -->
+            <fieldset class="form-fieldset">
+                <legend class="form-legend">1. Personal &amp; Account Details</legend>
+                
+                <div class="form-row">
+                    <!-- Full Name -->
+                    <div class="form-group form-col {% if errors and errors.get('full_name') %}has-error{% endif %}">
+                        <label for="full_name" class="form-label">Full Name <span class="req">*</span></label>
+                        <input 
+                            type="text" 
+                            id="full_name" 
+                            name="full_name" 
+                            class="form-control" 
+                            value="{{ form_data.get('full_name', '') }}" 
+                            placeholder="e.g. Eleanor Vance"
+                            required
+                            autocomplete="name"
+                            aria-required="true"
+                            {% if errors and errors.get('full_name') %}aria-invalid="true" aria-describedby="fullname-error"{% endif %}
+                        >
+                        {% if errors and errors.get('full_name') %}
+                            <p id="fullname-error" class="error-text" role="alert">{{ errors['full_name'] }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Username -->
+                    <div class="form-group form-col {% if errors and errors.get('username') %}has-error{% endif %}">
+                        <label for="username" class="form-label">Desired Username <span class="req">*</span></label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            class="form-control" 
+                            value="{{ form_data.get('username', '') }}" 
+                            placeholder="e.g. eleanor_v"
+                            required
+                            pattern="^[a-zA-Z0-9_]{3,30}$"
+                            autocomplete="username"
+                            aria-required="true"
+                            aria-describedby="username-help {% if errors and errors.get('username') %}username-error{% endif %}"
+                            {% if errors and errors.get('username') %}aria-invalid="true"{% endif %}
+                        >
+                        <small id="username-help" class="form-help-text">3-30 chars (alphanumeric &amp; underscores only).</small>
+                        {% if errors and errors.get('username') %}
+                            <p id="username-error" class="error-text" role="alert">{{ errors['username'] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group {% if errors and errors.get('email') %}has-error{% endif %}">
+                    <label for="email" class="form-label">Email Address <span class="req">*</span></label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-control" 
+                        value="{{ form_data.get('email', '') }}" 
+                        placeholder="eleanor@example.com"
+                        required
+                        autocomplete="email"
+                        aria-required="true"
+                        {% if errors and errors.get('email') %}aria-invalid="true" aria-describedby="email-error"{% endif %}
+                    >
+                    {% if errors and errors.get('email') %}
+                        <p id="email-error" class="error-text" role="alert">{{ errors['email'] }}</p>
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            <!-- Fieldset 2: Security & Passwords -->
+            <fieldset class="form-fieldset">
+                <legend class="form-legend">2. Security &amp; Password</legend>
+
+                <div class="form-row">
+                    <!-- Password -->
+                    <div class="form-group form-col {% if errors and errors.get('password') %}has-error{% endif %}">
+                        <label for="password" class="form-label">Password <span class="req">*</span></label>
+                        <div class="password-input-wrap">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-control" 
+                                placeholder="Create a strong password"
+                                required
+                                minlength="8"
+                                autocomplete="new-password"
+                                aria-required="true"
+                                aria-describedby="password-reqs {% if errors and errors.get('password') %}password-error{% endif %}"
+                                {% if errors and errors.get('password') %}aria-invalid="true"{% endif %}
+                            >
+                            <button type="button" class="btn-toggle-password" aria-label="Toggle password visibility" data-target="password">👁️</button>
+                        </div>
+                        <ul id="password-reqs" class="password-criteria-list">
+                            <li>Minimum 8 characters</li>
+                            <li>At least 1 uppercase letter</li>
+                            <li>At least 1 numeric digit</li>
+                        </ul>
+                        {% if errors and errors.get('password') %}
+                            <p id="password-error" class="error-text" role="alert">{{ errors['password'] }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group form-col {% if errors and errors.get('confirm_password') %}has-error{% endif %}">
+                        <label for="confirm_password" class="form-label">Confirm Password <span class="req">*</span></label>
+                        <div class="password-input-wrap">
+                            <input 
+                                type="password" 
+                                id="confirm_password" 
+                                name="confirm_password" 
+                                class="form-control" 
+                                placeholder="Re-enter password"
+                                required
+                                autocomplete="new-password"
+                                aria-required="true"
+                                {% if errors and errors.get('confirm_password') %}aria-invalid="true" aria-describedby="confirm-error"{% endif %}
+                            >
+                            <button type="button" class="btn-toggle-password" aria-label="Toggle confirm password visibility" data-target="confirm_password">👁️</button>
+                        </div>
+                        {% if errors and errors.get('confirm_password') %}
+                            <p id="confirm-error" class="error-text" role="alert">{{ errors['confirm_password'] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Fieldset 3: Terms & Agreements -->
+            <fieldset class="form-fieldset">
+                <legend class="form-legend">3. Terms &amp; Policies</legend>
+                
+                <div class="form-group-checkbox {% if errors and errors.get('terms') %}has-error{% endif %}">
+                    <input 
+                        type="checkbox" 
+                        id="terms" 
+                        name="terms" 
+                        class="form-checkbox"
+                        required
+                        aria-required="true"
+                        {% if errors and errors.get('terms') %}aria-invalid="true" aria-describedby="terms-error"{% endif %}
+                    >
+                    <label for="terms" class="checkbox-label">
+                        I confirm that I accept the <a href="#terms-modal" class="modal-trigger">Terms of Service</a> 
+                        and consent to the system's privacy standards. <span class="req">*</span>
+                    </label>
+                </div>
+                {% if errors and errors.get('terms') %}
+                    <p id="terms-error" class="error-text" role="alert">{{ errors['terms'] }}</p>
+                {% endif %}
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Complete Registration &amp; Enter &rarr;</button>
+            </div>
+        </form>
+
+        <footer class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('login') }}" class="auth-switch-link">Sign in here</a></p>
+        </footer>
+    </section>
+</div>
+{% endblock %}

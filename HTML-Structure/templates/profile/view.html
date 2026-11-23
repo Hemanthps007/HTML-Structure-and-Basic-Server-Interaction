@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile - {{ user.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    
+    <header class="page-header profile-page-header">
+        <div>
+            <span class="eyebrow-pill">Account Profile</span>
+            <h1 class="page-title">{{ user.full_name }}</h1>
+            <p class="page-subtitle">Personal account overview and server-side activity history.</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('edit_profile') }}" class="btn btn-primary">Edit Profile ✏️</a>
+            {% if user.is_manager %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Admin Panel &rarr;</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="profile-layout-grid">
+        
+        <!-- Left Column: Primary User Identity Card (Semantic <article>) -->
+        <article class="profile-card" aria-labelledby="profile-card-name">
+            <figure class="profile-figure">
+                <div class="profile-avatar-large">
+                    {{ user.full_name[:2].upper() }}
+                </div>
+                <figcaption class="profile-figcaption">
+                    <span class="badge badge-lg badge-{{ user.role }}">{{ user.role | capitalize }}</span>
+                    <span class="status-indicator status-{{ user.status }}">{{ user.status | capitalize }}</span>
+                </figcaption>
+            </figure>
+
+            <div class="profile-identity">
+                <h2 id="profile-card-name" class="profile-user-fullname">{{ user.full_name }}</h2>
+                <p class="profile-user-handle">@{{ user.username }}</p>
+                {% if user.bio %}
+                    <blockquote class="profile-bio-quote">
+                        <p>&ldquo;{{ user.bio }}&rdquo;</p>
+                    </blockquote>
+                {% endif %}
+            </div>
+
+            <hr class="card-divider">
+
+            <!-- Definition List: Ideal Semantic Structure for Key-Value Metadata -->
+            <dl class="profile-details-list">
+                <div class="detail-row">
+                    <dt class="detail-term">Email Address</dt>
+                    <dd class="detail-def"><a href="mailto:{{ user.email }}">{{ user.email }}</a></dd>
+                </div>
+                <div class="detail-row">
+                    <dt class="detail-term">Contact Phone</dt>
+                    <dd class="detail-def">{{ user.phone or 'Not specified' }}</dd>
+                </div>
+                <div class="detail-row">
+                    <dt class="detail-term">Location</dt>
+                    <dd class="detail-def">{{ user.location or 'Not specified' }}</dd>
+                </div>
+                <div class="detail-row">
+                    <dt class="detail-term">Joined Date</dt>
+                    <dd class="detail-def">
+                        <time datetime="{{ user.created_at.strftime('%Y-%m-%d') }}">
+                            {{ user.created_at.strftime('%B %d, %Y') }}
+                        </time>
+                    </dd>
+                </div>
+                <div class="detail-row">
+                    <dt class="detail-term">Last Activity</dt>
+                    <dd class="detail-def">
+                        {% if user.last_login %}
+                            <time datetime="{{ user.last_login.strftime('%Y-%m-%d %H:%M') }}">
+                                {{ user.last_login.strftime('%b %d, %Y at %H:%M') }} UTC
+                            </time>
+                        {% else %}
+                            Never logged in before
+                        {% endif %}
+                    </dd>
+                </div>
+            </dl>
+        </article>
+
+        <!-- Right Column: Personal Audit History & Security Overview -->
+        <div class="profile-main-col">
+            
+            <!-- Audit Trail Section -->
+            <section class="card profile-activity-card" aria-labelledby="activity-heading">
+                <header class="card-header">
+                    <h2 id="activity-heading" class="card-title">Recent Activity &amp; Audit Trail</h2>
+                    <p class="card-subtitle">Server-Side Rendered log of account interactions.</p>
+                </header>
+
+                {% if user_logs %}
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <caption class="sr-only">Chronological log of user actions and security events</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Timestamp</th>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Details</th>
+                                    <th scope="col">IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in user_logs %}
+                                    <tr>
+                                        <td>
+                                            <time datetime="{{ log.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}" class="timestamp-text">
+                                                {{ log.timestamp.strftime('%Y-%m-%d %H:%M') }}
+                                            </time>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-action badge-sm">{{ log.action }}</span>
+                                        </td>
+                                        <td class="log-details-cell">{{ log.details }}</td>
+                                        <td><code>{{ log.ip_address or 'Local' }}</code></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty-state">No recent activity recorded for this user account.</p>
+                {% endif %}
+            </section>
+
+            <!-- Semantic HTML Notes Card -->
+            <aside class="card semantic-notes-card" aria-labelledby="semantic-notes-heading">
+                <h3 id="semantic-notes-heading" class="card-title">📐 HTML Structure Highlights on this Page:</h3>
+                <ul class="semantic-check-bullets">
+                    <li><strong><code>&lt;article&gt;</code></strong> encapsulates the standalone profile card.</li>
+                    <li><strong><code>&lt;figure&gt;</code> &amp; <code>&lt;figcaption&gt;</code></strong> semantically pair the user avatar with their role badges.</li>
+                    <li><strong><code>&lt;dl&gt;</code>, <code>&lt;dt&gt;</code>, <code>&lt;dd&gt;</code></strong> structured definition lists represent user attributes semantically.</li>
+                    <li><strong><code>&lt;time datetime="..."&gt;</code></strong> conveys machine-readable ISO timestamps for screen readers.</li>
+                </ul>
+            </aside>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

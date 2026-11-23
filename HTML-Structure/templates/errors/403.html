@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}403 Forbidden - Access Denied{% endblock %}
+
+{% block content %}
+<div class="container error-container">
+    <section class="error-card" aria-labelledby="error-403-title">
+        <span class="error-code" aria-hidden="true">403</span>
+        <h1 id="error-403-title" class="error-title">Access Forbidden</h1>
+        <p class="error-desc">
+            You do not possess the required role permissions (Manager or Administrator) to access this protected Server-Side Rendered endpoint.
+        </p>
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Homepage</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline">Switch Account</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

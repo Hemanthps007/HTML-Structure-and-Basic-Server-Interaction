@@ -1,0 +1,15 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Instance & SQLite DB
+instance/
+*.db
+*.sqlite3
+
+# Environment
+.env
+.venv/
+venv/
+ENV/

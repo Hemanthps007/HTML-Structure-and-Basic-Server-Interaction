@@ -24,10 +24,16 @@ except ImportError:
     from .database import seed_database
     from .forms import validate_registration, validate_profile_update
 
-# Initialize application
-app = Flask(__name__)
+# Initialize application with anchored paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'cognify-html-structure-secure-session-key-2026')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usermanagement.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'usermanagement.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)

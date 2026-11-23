@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User #{{ target_user.id }} ({{ target_user.username }}){% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    
+    <header class="page-header">
+        <div class="header-left">
+            <span class="eyebrow-pill">Administrative Modification</span>
+            <h1 class="page-title">Edit User Account: {{ target_user.username }}</h1>
+            <p class="page-subtitle">Assign system permissions, change operational status, and manage profile names.</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('admin_users') }}" class="btn btn-outline">&larr; Back to Directory</a>
+        </div>
+    </header>
+
+    <div class="profile-layout-grid">
+        <div class="profile-main-col">
+            <section class="card form-card" aria-labelledby="user-mod-heading">
+                <header class="card-header">
+                    <h2 id="user-mod-heading" class="card-title">Modify Permissions &amp; Status</h2>
+                </header>
+
+                <form action="{{ url_for('admin_edit_user', user_id=target_user.id) }}" method="POST" class="standard-form">
+                    
+                    <fieldset class="form-fieldset">
+                        <legend class="form-legend">Account Identifiers</legend>
+
+                        <div class="form-row">
+                            <div class="form-group form-col">
+                                <label for="username" class="form-label">Username (Immutable)</label>
+                                <input type="text" id="username" class="form-control" value="{{ target_user.username }}" disabled readonly>
+                            </div>
+
+                            <div class="form-group form-col">
+                                <label for="email" class="form-label">Email Address (Immutable)</label>
+                                <input type="email" id="email" class="form-control" value="{{ target_user.email }}" disabled readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="full_name" class="form-label">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="full_name" 
+                                name="full_name" 
+                                class="form-control" 
+                                value="{{ target_user.full_name }}" 
+                                required
+                            >
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="form-fieldset">
+                        <legend class="form-legend">Access &amp; Role-Based Access Control</legend>
+
+                        <div class="form-row">
+                            <!-- Role Selection -->
+                            <div class="form-group form-col">
+                                <label for="role" class="form-label">System Role <span class="req">*</span></label>
+                                <select id="role" name="role" class="form-control form-select" required>
+                                    <option value="user" {% if target_user.role == 'user' %}selected{% endif %}>Standard User (Profile access only)</option>
+                                    <option value="manager" {% if target_user.role == 'manager' %}selected{% endif %}>Manager (Dashboard &amp; audit visibility)</option>
+                                    <option value="admin" {% if target_user.role == 'admin' %}selected{% endif %}>Administrator (Full system authority)</option>
+                                </select>
+                            </div>
+
+                            <!-- Status Selection -->
+                            <div class="form-group form-col">
+                                <label for="status" class="form-label">Account Status <span class="req">*</span></label>
+                                <select id="status" name="status" class="form-control form-select" required>
+                                    <option value="active" {% if target_user.status == 'active' %}selected{% endif %}>Active (Normal login allowed)</option>
+                                    <option value="pending" {% if target_user.status == 'pending' %}selected{% endif %}>Pending (Awaiting verification)</option>
+                                    <option value="suspended" {% if target_user.status == 'suspended' %}selected{% endif %}>Suspended (Login blocked)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-actions form-actions-spaced">
+                        <button type="submit" class="btn btn-primary">Update User Record</button>
+                        <a href="{{ url_for('admin_users') }}" class="btn btn-outline">Cancel</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <aside class="profile-sidebar" aria-label="Target Account Metadata">
+            <div class="card info-card">
+                <h3 class="card-title">User Account Metadata</h3>
+                <dl class="profile-details-list">
+                    <div class="detail-row">
+                        <dt class="detail-term">Database ID</dt>
+                        <dd class="detail-def">#{{ target_user.id }}</dd>
+                    </div>
+                    <div class="detail-row">
+                        <dt class="detail-term">Registered On</dt>
+                        <dd class="detail-def">
+                            <time datetime="{{ target_user.created_at.strftime('%Y-%m-%d') }}">
+                                {{ target_user.created_at.strftime('%B %d, %Y') }}
+                            </time>
+                        </dd>
+                    </div>
+                    <div class="detail-row">
+                        <dt class="detail-term">Last Activity</dt>
+                        <dd class="detail-def">
+                            {% if target_user.last_login %}
+                                {{ target_user.last_login.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </aside>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}500 Internal Server Error{% endblock %}
+
+{% block content %}
+<div class="container error-container">
+    <section class="error-card" aria-labelledby="error-500-title">
+        <span class="error-code text-danger" aria-hidden="true">500</span>
+        <h1 id="error-500-title" class="error-title">Internal Server Error</h1>
+        <p class="error-desc">
+            An unexpected error occurred during server-side compilation. Database transactions have been safely rolled back.
+        </p>
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Homepage</a>
+        </div>
+    </section>
+</div>
+{% endblock %}
